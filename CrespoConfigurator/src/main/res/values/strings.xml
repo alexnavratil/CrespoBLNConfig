@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Crespo BLN Config</string>
+    <string name="action_settings">Settings</string>
+    <string name="info">This App needs *root*.
+        I\'m not responsible for any damages.
+        If you point the finger at me for messing up your device,
+        I will laugh at you.\n\n
+        This app allows you to disable the backlight on the capacitive buttons (back - menu - search - home) when the screen is turned off.
+        Check the checkbox if you want to enable the backlight when you receive a new notification. Uncheck the checkbox if the backlight should be turned off when the screen is turned off.\n\n
+        Follow me on Twitter: @alexnavratil
+    </string>
+
+</resources>

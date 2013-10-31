@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CrespoConfigurator/CrespoConfigurator.iml" filepath="$PROJECT_DIR$/CrespoConfigurator/CrespoConfigurator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CrespoConfiguratorProject.iml" filepath="$PROJECT_DIR$/CrespoConfiguratorProject.iml" />
+    </modules>
+  </component>
+</project>
+

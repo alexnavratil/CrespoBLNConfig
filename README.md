@@ -10,3 +10,9 @@ Just install the CrespoBLNConfig.apk and the the option you want.
 This App needs *root*.
 I'm not responsible for any damages.
 If you point the finger at me for messing up your device, I will laugh at you.
+
+Download: http://bit.ly/CrespoBLNConfig
+
+License
+=======
+You can use this source code to learn from it, change things or do some other legal stuff but please mention this repo.

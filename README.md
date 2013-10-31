@@ -5,7 +5,7 @@ I developed this app because in CyanogenMod 10.1 there was an option to disable 
 In CyanogenMod 10.2 there is no option to disable BLN.
 I know that copy the CrespoParts.apk to /system/app will bring back that
 function but the disadvantage is that you must copy this file after each update.
-Just install the CrespoBLNConfig.apk and the the option you want.
+Just install the CrespoBLNConfig.apk and then check the option you want.
 
 This App needs *root*.
 I'm not responsible for any damages.

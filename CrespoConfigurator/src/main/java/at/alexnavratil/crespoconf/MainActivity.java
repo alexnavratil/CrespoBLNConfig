@@ -1,8 +1,12 @@
 package at.alexnavratil.crespoconf;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Toast;
@@ -16,69 +20,52 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class MainActivity extends Activity {
-
-    public static final String BLN_SETTINGS_FILE = "/sys/class/misc/notification/enabled";
-    public static final String COMPAT_DEVICE = "crespo";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final BlnConfiguration bln = new BlnConfiguration();
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPref.edit();
 
-        if(checkCompatibility()){
+        if (bln.checkCompatibility()) {
             final CheckBox checkBLN = (CheckBox) findViewById(R.id.checkBLN);
-            checkBLN.setChecked(isBlnEnabled());
+            try {
+                boolean bln_enabled = bln.isBlnEnabled();
+                checkBLN.setChecked(bln_enabled);
+                if(sharedPref.getBoolean("bln_enabled", true) != bln_enabled){
+                    editor.putBoolean("bln_enabled", bln_enabled);
+                    editor.commit();
+                }
+            } catch (FileNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Back Light Notification (BLN) settings file not found!", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "An error occured while reading BLN settings file!", Toast.LENGTH_LONG).show();
+            }
 
             checkBLN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    setBln(isChecked);
-                    checkBLN.setChecked(isBlnEnabled());
+                    try {
+                        bln.setBln(isChecked);
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), "An error occured while writing to BLN settings file!", Toast.LENGTH_LONG).show();
+                    }
+                    try {
+                        boolean bln_enabled = bln.isBlnEnabled();
+                        checkBLN.setChecked(bln_enabled);
+                        editor.putBoolean("bln_enabled", bln_enabled);
+                        editor.commit();
+                    } catch (FileNotFoundException e) {
+                        Toast.makeText(getApplicationContext(), "Back Light Notification (BLN) settings file not found!", Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Toast.makeText(getApplicationContext(), "An error occured while reading BLN settings file!", Toast.LENGTH_LONG).show();
+                    }
                 }
             });
-        } else{
+        } else {
             Toast.makeText(getApplicationContext(), "Your device is not supported! This app is only for crespo users.", Toast.LENGTH_LONG).show();
             finish();
         }
     }
-
-    private boolean checkCompatibility(){
-        File f = new File(BLN_SETTINGS_FILE);
-        if(Build.DEVICE.equals(COMPAT_DEVICE) && f.exists() && f.isFile()){
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isBlnEnabled(){
-        BufferedReader br = null;
-        try{
-            br = new BufferedReader(new FileReader(BLN_SETTINGS_FILE));
-            String line;
-            while((line = br.readLine()) != null){
-                try{
-                    int val = Integer.parseInt(line);
-                    return val==0 ? false : true;
-                } catch(NumberFormatException e){}
-            }
-        } catch(FileNotFoundException e){
-            Toast.makeText(getApplicationContext(), "Back Light Notification (BLN) settings file not found!", Toast.LENGTH_LONG).show();
-        } catch (IOException e){
-            Toast.makeText(getApplicationContext(), "An error occured while reading BLN settings file!", Toast.LENGTH_LONG).show();
-        }
-        return true;
-    }
-
-    private void setBln(boolean enabled){
-        BufferedWriter bw = null;
-        try{
-            Runtime.getRuntime().exec("su");
-            bw = new BufferedWriter(new FileWriter(BLN_SETTINGS_FILE, false));
-            bw.write(enabled ? "1" : "0");
-            bw.close();
-        } catch(IOException e){
-            Toast.makeText(getApplicationContext(), "An error occured while writing to BLN settings file!", Toast.LENGTH_LONG).show();
-        }
-    }
-
 }
